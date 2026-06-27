@@ -42,11 +42,11 @@ faq_answer = [item["answer"] for item in hp_gas_faq]
 def preprocess_text(text):
     """tocanizer, cleans stop words, and lemmatizes text """
     doc = nlp(text.lower().strip())
-    cleaned tokens =[
-        token.lemma_for token in doc
+    cleaned_tokens =[
+        token.lemma_ for token in doc
         if not token.is_stop and not token.is_punct
     ]
-    return" ".join(clened_tokens)
+    return" ".join(cleaned_tokens)
 
 # process the knowledge base 
 preprocessed_questions = [preprocess_text(q) for q in faq_questions]
@@ -67,7 +67,7 @@ def get_hp_gas_responce(user_query,threshold = 0.25):
     # compute similarity array
     similarity_scores= cosine_similarity(quary_vector,tfidf_matrix).flatten()
     #extract peak match
-    best_match_idx = similarity_scorcs.argmax()
+    best_match_idx = similarity_scores.argmax()
     highest_score = similarity_scores[best_match_idx]
 
     #evaluate confidance threshold 
@@ -81,16 +81,16 @@ def run_hp_bot():
     print ("="*60)
     print("          HP GAS DISTRIBUTION CUSTOMER HELPDESK CHATBOT ")
     print("="*60)
-    print(type your question below (eg. 'my cylinder is leaking' or 'book gas'))
+    print("type your question below (eg. 'my cylinder is leaking' or 'book gas')")
     print("type 'exit' to end the session .")
     print("-"*60)
-    while true: 
+    while True: 
         user_input = input("\nyou:")
         if user_input.lower() in ['quit','exit','bye']:
             print("chatbot : thank you for choosing hp gas. have a safe day ahead!")
             break
 
-        responce = get_hp_gas_response(user_input)
+        responce = get_hp_gas_responce(user_input)
         print(f"chatbot :{responce}")
 if __name__=="__main__":
     run_hp_bot()
