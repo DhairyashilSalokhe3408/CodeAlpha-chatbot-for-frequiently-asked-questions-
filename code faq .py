@@ -51,29 +51,30 @@ def preprocess_text(text):
 # process the knowledge base 
 preprocessed_questions = [preprocess_text(q) for q in faq_questions]
 # fit tf idf vectorizer 
-vectorizer = TfidVectorizer.fit_transform(preprocessed_questions)
+vectorizer = TfidfVectorizer()
+tfidf_matrix = vectorizer.fit_transform(preprocessed_questions)
 #machine engine 
 def get_hp_gas_responce(user_query,threshold = 0.25):
     """calculate intent match using cosine similarity."""
-    clened_query = preprocess_text (user_quary)
+    clened_query = preprocess_text (user_query)
 
-# cheak if string is completely empty after clening 
-if not clened_quary.strip():
-    return "welcome to hp gas support. please type a specific query (eg 'how to book a cylinder ')."
+    # cheak if string is completely empty after clening 
+    if not clened_query.strip():
+        return "welcome to hp gas support. please type a specific query (eg 'how to book a cylinder ')."
 
-#convert quary into matrix space 
-quary_vector = vectorizer.transform([clened_query])
-# compute similarity array
-similarity_scores= cosine_similarity(quary_vector,tfidf_matrix).flatten()
-#extract peak match
-best_match_idx = similarity_scorcs.argmax()
-highest_score = similarity_scores[best_match_idx]
+    #convert quary into matrix space 
+    quary_vector = vectorizer.transform([clened_query])
+    # compute similarity array
+    similarity_scores= cosine_similarity(quary_vector,tfidf_matrix).flatten()
+    #extract peak match
+    best_match_idx = similarity_scorcs.argmax()
+    highest_score = similarity_scores[best_match_idx]
 
-#evaluate confidance threshold 
-if highest_score>=threshold:
-    return faq_answer[best_match_idx]
-else:
-    return"i am sorry, i couldn't find an exact match for your hp gas request. For assistance, you can call our helpline or register a ticket on the My HP Gas portal."
+    #evaluate confidance threshold 
+    if highest_score>=threshold:
+        return faq_answer[best_match_idx]
+    else:
+        return"i am sorry, i couldn't find an exact match for your hp gas request. For assistance, you can call our helpline or register a ticket on the My HP Gas portal."
 
 #interactive terminal chat loop 
 def run_hp_bot():
@@ -87,11 +88,10 @@ def run_hp_bot():
         user_input = input("\nyou:")
         if user_input.lower() in ['quit','exit','bye']:
             print("chatbot : thank you for choosing hp gas. have a safe day ahead!")
+            break
 
-break
-
-responce = get_hp_gas_response(user_input)
-print(f"chatbot :{response}")
+        responce = get_hp_gas_response(user_input)
+        print(f"chatbot :{responce}")
 if __name__=="__main__":
     run_hp_bot()
         
